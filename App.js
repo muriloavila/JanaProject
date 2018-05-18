@@ -1,23 +1,28 @@
-import React from 'react';
-import { StatusBar, Platform } from 'react-native';
+import React, {Component} from 'react';
+import {
+    AppRegistry,
+    StyleSheet,
+    Text,
+    View,
+    Image,
+    TouchableOpacity,
+    Alert
+} from 'react-native';
+
 import Home from './src/screens/Home';
-//import Description from './src/screens/Description';
-import { StackNavigator } from 'react-navigation';
 
-
-const App = StackNavigator({
-        Home: {
-            screen: Home
-        },
-        // Description: {
-        //     screen: Description
-        // },
-    },
-    {
-        cardStyle: {
-            paddingTop: Platform.OS === 'ios' ? 0 : StatusBar.currentHeight
-        }
+export default class appTime extends Component {
+    render() {
+        return (
+            <View style={styles.container}>
+                <Home/>
+            </View>
+        );
     }
-);
+}
 
-export default App
+const styles = StyleSheet.create({
+    container: {flex: 1}
+});
+
+AppRegistry.registerComponent('appTime', () => appTime);
