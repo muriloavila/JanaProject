@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 
 import Home from './src/screens/Home';
+import PickerExample from './src/screens/Picker';
 
 export default class appTime extends Component {
     render() {
