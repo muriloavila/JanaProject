@@ -4,14 +4,11 @@ import {
     Text,
     View,
     TouchableOpacity,
-    Alert,
-    Picker
+    Alert
 } from 'react-native';
-
-const botaoPressionado = (ponto) => {
-    Alert.alert('Marcando Ponto...'+ponto);
-};
-
+import { Button } from 'react-native-elements';
+import Icon from 'react-native-vector-icons/FontAwesome';
+import AwesomeAlert from 'react-native-awesome-alerts';
 
 const estilo = StyleSheet.create({
     botao: {
@@ -36,22 +33,97 @@ const estilo = StyleSheet.create({
 
 
 export default class Home extends Component {
-    state = {user: ''};
+    constructor(props) {
+        super(props);
+        this.state = {
+            isLoading: false,
+            text: 'Gravando Ponto: Entrada',
+            tipo: 1,
+            showAlert: false,
+            alertText: 'Ponto Gravado'
+        };
+    }
+
+    onButtonPressPonto = () => {
+        this.setState({isLoading: true});
+        var este = this;
+        
+        fetch('http://18.191.54.140/ponto/now/type/'+este.state.tipo, {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+              },
+        }).then(function(response){
+            if(response.status == 200){
+                este.state.showAlert = true;
+                
+                switch(este.state.tipo){
+                    case 1:
+                        este.setState({isLoading: false, text: 'Gravando Ponto: Almoço Entrada', tipo: 2});
+                    break;
+
+                    case 2:
+                        este.setState({isLoading: false, text: 'Gravando Ponto: Almoço Volta', tipo: 3});
+                    break;
+
+                    case 3:
+                        este.setState({isLoading: false, text: 'Gravando Ponto: Saida', tipo: 4});
+                    break;
+
+                    case 4:
+                        este.setState({isLoading: false, text: 'Gravando Ponto: Entrada', tipo: 1});
+                    break;
+                }
+
+                return;
+            }else{
+                este.state.alertText = "Erro ao gravar Ponto";
+                console.log(responseJson);
+            }
+        });
+    };
+
+    hideAlert = () => {
+        this.setState({
+          showAlert: false
+        });
+    };
+
     render() {
         return (
           <View style={estilo.principal}>
-                <View>
-                    <TouchableOpacity onPress={botaoPressionado.bind('1')} style={estilo.botao}>
-                        <Text>Gravar Ponto</Text>
-                    </TouchableOpacity>
-
-                    <Picker selectedValue = {this.state.user}>
-                        <Picker.Item label = "Entrada"          value = "1" />
-                        <Picker.Item label = "Almoço Entrada"   value = "2" />
-                        <Picker.Item label = "Almoço Saída"     value = "3" />
-                        <Picker.Item label = "Sair"             value = "4" />
-                    </Picker>
-                </View>
+                <Button
+                    title={this.state.text}
+                    loading={this.state.isLoading}
+                    loadingProps={{ size: "large", color: "rgba(111, 202, 186, 1)" }}
+                    titleStyle={{ fontWeight: "700" }}
+                    type={this.state.type}
+                    buttonStyle={{
+                        backgroundColor: "rgba(92, 99,216, 1)",
+                        width: 300,
+                        height: 45,
+                        borderColor: "transparent",
+                        borderWidth: 0,
+                        borderRadius: 5
+                    }}
+                    onPress={() => this.onButtonPressPonto(this)}
+                    containerStyle={{ marginTop: 20 }}
+                />
+                <AwesomeAlert
+                    show={this.state.showAlert}
+                    showProgress={false}
+                    title={this.state.alertText}
+                    closeOnTouchOutside={true}
+                    closeOnHardwareBackPress={false}
+                    showCancelButton={false}
+                    showConfirmButton={true}
+                    confirmText="O.K."
+                    confirmButtonColor="#DD6B55"
+                    onConfirmPressed={() => {
+                        this.hideAlert();
+                    }}
+                />
           </View>
         )
     }
