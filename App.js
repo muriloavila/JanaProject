@@ -10,13 +10,14 @@ import {
 } from 'react-native';
 
 import Home from './src/screens/Home';
-import PickerExample from './src/screens/Picker';
+import Contador from './src/components/Contador';
 
 export default class appTime extends Component {
     render() {
         return (
             <View style={styles.container}>
                 <Home/>
+                <Contador/>
             </View>
         );
     }

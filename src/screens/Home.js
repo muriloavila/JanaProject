@@ -1,13 +1,10 @@
-import React, { Component } from 'react'
+import React, { Component } from 'react';
 import {
     StyleSheet,
-    Text,
-    View,
-    TouchableOpacity,
-    Alert
+    View
 } from 'react-native';
 import { Button } from 'react-native-elements';
-import Icon from 'react-native-vector-icons/FontAwesome';
+
 import AwesomeAlert from 'react-native-awesome-alerts';
 
 const estilo = StyleSheet.create({
@@ -46,7 +43,7 @@ export default class Home extends Component {
 
     onButtonPressPonto = () => {
         this.setState({isLoading: true});
-        var este = this;
+        const este = this;
         
         fetch('http://18.191.54.140/ponto/now/type/'+este.state.tipo, {
             method: 'POST',
@@ -55,7 +52,7 @@ export default class Home extends Component {
                 'Content-Type': 'application/json',
               },
         }).then(function(response){
-            if(response.status == 200){
+            if(response.status === 200){
                 este.state.showAlert = true;
                 
                 switch(este.state.tipo){
@@ -75,11 +72,8 @@ export default class Home extends Component {
                         este.setState({isLoading: false, text: 'Gravando Ponto: Entrada', tipo: 1});
                     break;
                 }
-
-                return;
             }else{
                 este.state.alertText = "Erro ao gravar Ponto";
-                console.log(responseJson);
             }
         });
     };
@@ -89,6 +83,8 @@ export default class Home extends Component {
           showAlert: false
         });
     };
+
+
 
     render() {
         return (
