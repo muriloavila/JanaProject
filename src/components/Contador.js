@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet,Text,View, TouchableHighlight } from 'react-native';
+import { StyleSheet,Text,View, TouchableHighlight, Vibration } from 'react-native';
 import { Stopwatch, Timer } from 'react-native-stopwatch-timer';
 import AwesomeAlert from 'react-native-awesome-alerts';
 
@@ -13,7 +13,7 @@ export default class Contador extends Component {
             timerReset: false,
             stopwatchReset: false,
             showAlert: false,
-            alertText: 'Horário'
+            alertText: 'HorÃ¡rio'
         };
         this.toggleTimer = this.toggleTimer.bind(this);
         this.resetTimer = this.resetTimer.bind(this);
@@ -42,9 +42,18 @@ export default class Contador extends Component {
     };
 
     hideAlert = () => {
-        this.setState({
-            showAlert: false
-        });
+        if(this.state.showAlert === true){
+            this.setState({showAlert: false});
+            this.setState({timerStart: false, timerReset: true});
+            Vibration.cancel();
+        }
+    };
+
+    handleTimerComplete = () => {
+        if(this.state.showAlert === false){
+            this.setState({showAlert: true});
+            Vibration.vibrate(PATTERN, true);
+        }
     };
 
     render() {
@@ -53,7 +62,7 @@ export default class Contador extends Component {
                 <Timer totalDuration={this.state.totalDuration} msecs start={this.state.timerStart}
                        reset={this.state.timerReset}
                        options={options}
-                       handleFinish={handleTimerComplete.bind(this)}
+                       handleFinish={this.handleTimerComplete}
                        getTime={this.getFormattedTime} />
                 <TouchableHighlight onPress={this.toggleTimer}>
                     <Text style={{fontSize: 30}}>{!this.state.timerStart ? "Start" : "Stop"}</Text>
@@ -81,10 +90,7 @@ export default class Contador extends Component {
     }
 }
 
-const handleTimerComplete = () => {
-    alert("custom completion function");
-
-};
+const PATTERN = [1000, 1000, 1000];
 
 const options = {
     container: {

@@ -6,6 +6,7 @@ import {
 import { Button } from 'react-native-elements';
 
 import AwesomeAlert from 'react-native-awesome-alerts';
+import Contador from '../components/Contador';
 
 const estilo = StyleSheet.create({
     botao: {
@@ -19,6 +20,7 @@ const estilo = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
+        height: 50
     },
     text: {
         fontSize: 30,
@@ -106,6 +108,7 @@ export default class Home extends Component {
                     onPress={() => this.onButtonPressPonto(this)}
                     containerStyle={{ marginTop: 20 }}
                 />
+              <Contador/>
                 <AwesomeAlert
                     show={this.state.showAlert}
                     showProgress={false}
