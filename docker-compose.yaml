@@ -1,0 +1,21 @@
+# docker-compose.yml
+packager:
+    build: .
+    dockerfile: docker/Dockerfile
+    net: host
+    working_dir: /app
+    privileged: true
+    volumes:
+     - "./:/app"
+     - ./gradle_cache:/root/.gradle
+     - "/dev:/dev"
+     - "/dev/bus/usb:/dev/bus/usb"
+    command: |
+     bash -c "
+     npm install
+     adb kill-server
+     adb reverse tcp:8081 tcp:8081
+     react-native start &
+     react-native run-android
+     adb logcat *:S ReactNative:V ReactNativeJS:V
+     "
